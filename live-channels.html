@@ -9,6 +9,30 @@
   </head>
   <body style="margin:0;background:var(--bg,#1a1c1e);color:var(--text,#e8eaed)">
     <div id="app"></div>
+
+    <!-- Upgrade banner (minimal) -->
+    <div id="upgrade-banner" style="position:fixed;right:20px;bottom:20px;z-index:9999;background:linear-gradient(90deg,#0ea5e9,#7c3aed);color:#fff;padding:12px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.4);font-family:Arial, sans-serif;display:flex;align-items:center;gap:10px">
+      <div style="font-weight:700">Upgrade to Pro</div>
+      <button id="upgrade-btn" style="background:#fff;color:#111;border:none;padding:8px 10px;border-radius:6px;cursor:pointer;font-weight:600">$49 / month</button>
+    </div>
+
+    <script>
+      document.getElementById('upgrade-btn').addEventListener('click', async function () {
+        try {
+          const resp = await fetch('/api/create-checkout-session', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) });
+          const data = await resp.json();
+          if (data?.url) {
+            // Redirect to Stripe Checkout
+            window.location.href = data.url;
+            return;
+          }
+          alert('Checkout creation failed: ' + (data?.error || 'unknown'));
+        } catch (e) {
+          alert('Checkout failed: ' + e.message);
+        }
+      });
+    </script>
+
     <script type="module" src="/src/live-channels-main.ts"></script>
   </body>
 </html>
