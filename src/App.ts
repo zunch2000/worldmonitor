@@ -435,6 +435,7 @@ export class App {
           SA: 'Saudi Arabia', TR: 'Turkey', PL: 'Poland', DE: 'Germany',
           FR: 'France', GB: 'United Kingdom', IN: 'India', PK: 'Pakistan',
           SY: 'Syria', YE: 'Yemen', MM: 'Myanmar', VE: 'Venezuela',
+          MX: 'Mexico',
         };
         const countryName = countryNames[countryCode.toUpperCase()] || countryCode;
 
@@ -1158,6 +1159,7 @@ export class App {
     GB: { n: 58.7, s: 49.9, e: 1.8, w: -8.2 }, DE: { n: 55.1, s: 47.3, e: 15.0, w: 5.9 },
     FR: { n: 51.1, s: 41.3, e: 9.6, w: -5.1 }, TR: { n: 42.1, s: 36, e: 44.8, w: 26 },
     BR: { n: 5.3, s: -33.8, e: -34.8, w: -73.9 },
+    MX: { n: 32.7, s: 14.5, e: -86.7, w: -118.4 },
   };
 
   private static COUNTRY_ALIASES: Record<string, string[]> = {
@@ -1183,6 +1185,7 @@ export class App {
     GB: ['united kingdom', 'british', 'london', 'uk '],
     BR: ['brazil', 'brazilian', 'brasilia', 'lula', 'bolsonaro'],
     AE: ['united arab emirates', 'uae', 'emirati', 'dubai', 'abu dhabi'],
+    MX: ['mexico', 'mexican', 'cartel', 'sinaloa', 'jalisco', 'cjng', 'tijuana', 'juarez', 'fentanyl', 'sheinbaum', 'sedena', 'narco'],
   };
 
   private static otherCountryTermsCache: Map<string, string[]> = new Map();
@@ -1918,6 +1921,10 @@ export class App {
               <option value="oceania">${t('components.deckgl.views.oceania')}</option>
             </select>
           </div>
+        </div>
+        <div class="header-center" id="upgrade-banner" style="display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(90deg,#0ea5e9,#7c3aed);color:#fff;padding:8px 12px;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.3);flex:0 0 auto">
+          <div style="font-weight:700;font-size:14px">Upgrade to Pro</div>
+          <button id="upgrade-btn" style="background:#fff;color:#111;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-weight:600;font-size:12px">$49 / month</button>
         </div>
         <div class="header-right">
           <button class="search-btn" id="searchBtn"><kbd>⌘K</kbd> ${t('header.search')}</button>
@@ -2684,6 +2691,22 @@ export class App {
     document.getElementById('searchBtn')?.addEventListener('click', () => {
       this.updateSearchIndex();
       this.searchModal?.open();
+    });
+
+    // Upgrade button
+    document.getElementById('upgrade-btn')?.addEventListener('click', async function () {
+      try {
+        const resp = await fetch('/api/create-checkout-session', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) });
+        const data = await resp.json();
+        if (data?.url) {
+          // Redirect to Stripe Checkout
+          window.location.href = data.url;
+          return;
+        }
+        alert('Checkout creation failed: ' + (data?.error || 'unknown'));
+      } catch (e) {
+        alert('Checkout failed: ' + (e instanceof Error ? e.message : String(e)));
+      }
     });
 
     // Copy link button

@@ -7,14 +7,19 @@
     <title>Channel management - World Monitor</title>
     <script>(function(){try{var t=localStorage.getItem('worldmonitor-theme');if(t==='light')document.documentElement.dataset.theme='light';}catch(e){}document.documentElement.classList.add('no-transition');})()</script>
   </head>
-  <body style="margin:0;background:var(--bg,#1a1c1e);color:var(--text,#e8eaed)">
-    <div id="app"></div>
-
-    <!-- Upgrade banner (minimal) -->
-    <div id="upgrade-banner" style="position:fixed;right:20px;bottom:20px;z-index:9999;background:linear-gradient(90deg,#0ea5e9,#7c3aed);color:#fff;padding:12px 16px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.4);font-family:Arial, sans-serif;display:flex;align-items:center;gap:10px">
-      <div style="font-weight:700">Upgrade to Pro</div>
-      <button id="upgrade-btn" style="background:#fff;color:#111;border:none;padding:8px 10px;border-radius:6px;cursor:pointer;font-weight:600">$49 / month</button>
+  <body style="margin:0;background:var(--bg,#1a1c1e);color:var(--text,#e8eaed);display:flex;flex-direction:column;height:100vh">
+    <!-- Outer Header -->
+    <div class="header" style="background:var(--header-bg,#252829);border-bottom:1px solid var(--border,#3a3d43);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <div class="header-left" style="flex:0 0 auto"></div>
+      <div class="header-center" id="upgrade-banner" style="flex:1;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(90deg,#0ea5e9,#7c3aed);color:#fff;padding:8px 12px;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.3);max-width:250px;margin:0 auto">
+        <div style="font-weight:700;font-size:14px">Upgrade to Pro</div>
+        <button id="upgrade-btn" style="background:#fff;color:#111;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-weight:600;font-size:12px">$49 / month</button>
+      </div>
+      <div class="header-right" style="flex:0 0 auto"></div>
     </div>
+
+    <!-- Live Channels App Content -->
+    <div id="app" style="flex:1;overflow:auto"></div>
 
     <script>
       document.getElementById('upgrade-btn').addEventListener('click', async function () {
